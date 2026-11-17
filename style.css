@@ -29,7 +29,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px;
+    scroll-padding-top: 90px; /* keeps section titles clear of the sticky nav */
 }
 
 body {
@@ -53,70 +53,11 @@ ul {
     display: none;
 }
 
-/* ---------- Navbar ---------- */
-.navbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 14px 6%;
-    background-color: color-mix(in srgb, var(--bg) 85%, transparent);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-}
-
-.logo {
-    font-size: 1.3rem;
-    font-weight: 700;
-}
-
-.nav-links {
-    display: flex;
-    gap: 30px;
-}
-
-.nav-links a {
-    font-size: 0.95rem;
-    color: var(--muted);
-    transition: color 0.2s;
-}
-
-.nav-links a:hover {
-    color: var(--text);
-}
-
-.nav-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.pill-btn {
-    font-family: inherit;
-    font-size: 0.85rem;
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--text);
-    padding: 6px 16px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.pill-btn:hover {
-    background-color: var(--surface);
-}
-
-.menu-btn {
-    display: none;
-}
-
 /* ---------- Hero (two columns) ---------- */
 .hero {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 80px 6% 70px;
+    padding: 60px 6% 30px;
     display: grid;
     grid-template-columns: 1.2fr 1fr;
     align-items: center;
@@ -158,15 +99,6 @@ ul {
     gap: 12px;
 }
 
-.scroll-cue {
-    display: inline-block;
-    margin-top: 40px;
-    font-size: 0.8rem;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--muted);
-}
-
 .hero-photo {
     justify-self: center;
     width: 100%;
@@ -180,6 +112,80 @@ ul {
     border-radius: 28px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
+}
+
+/* ---------- Navigation pill (sticky + adaptive) ---------- */
+.nav-sentinel {
+    height: 1px; /* invisible marker: JavaScript watches it to know when the nav sticks */
+}
+
+.nav-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    padding: 14px 6%;
+    pointer-events: none; /* the empty sides don't block clicks */
+}
+
+.nav-pill {
+    pointer-events: auto;
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    padding: 8px 10px 8px 28px;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: var(--shadow);
+    transition: padding 0.3s, gap 0.3s, background-color 0.3s, box-shadow 0.3s;
+}
+
+.nav-links {
+    display: flex;
+    gap: 26px;
+}
+
+.nav-links a {
+    font-size: 0.95rem;
+    color: var(--muted);
+    transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--text);
+}
+
+.nav-links a.active {
+    font-weight: 600;
+}
+
+/* when the nav has reached the top of the screen */
+.nav-wrap.stuck .nav-pill {
+    padding: 5px 8px 5px 22px;
+    gap: 20px;
+    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.pill-btn {
+    font-family: inherit;
+    font-size: 0.85rem;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 6px 16px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap; /* keeps "Light Mode" / "Dark Mode" on one line */
+    transition: background-color 0.2s;
+}
+
+.pill-btn:hover {
+    background-color: var(--bg);
 }
 
 /* ---------- Buttons ---------- */
@@ -233,10 +239,7 @@ ul {
     display: flex;
     justify-content: space-between;
     align-items: center;
-}
-
-.card-head-spaced {
-    margin-top: 32px;
+    gap: 12px;
 }
 
 .badge {
@@ -245,6 +248,7 @@ ul {
     border: 1px solid var(--border);
     padding: 2px 12px;
     border-radius: 999px;
+    white-space: nowrap;
 }
 
 /* About box */
@@ -266,7 +270,50 @@ ul {
     color: var(--muted);
 }
 
-/* Skills & tools tags */
+/* Education */
+.education-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.edu-logo {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    object-fit: contain; /* for when you swap in a real logo image */
+}
+
+.edu-info h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+
+.edu-degree {
+    margin-top: 4px;
+    color: var(--muted);
+}
+
+.edu-date {
+    margin-left: 6px;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.edu-detail {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 0.95rem;
+}
+
+/* Skill groups (built by JavaScript) */
+.skill-group + .skill-group {
+    margin-top: 32px; /* space between groups */
+}
+
 .tag-list {
     display: flex;
     flex-wrap: wrap;
@@ -335,6 +382,19 @@ ul {
     object-fit: contain;
 }
 
+/* Two-logo contacts: show one image depending on the theme */
+.icon-dark {
+    display: none;
+}
+
+[data-theme="dark"] .icon-light {
+    display: none;
+}
+
+[data-theme="dark"] .icon-dark {
+    display: block;
+}
+
 /* ---------- Back to top ---------- */
 .top-btn {
     position: fixed;
@@ -367,7 +427,7 @@ ul {
 @media (max-width: 800px) {
     .hero {
         grid-template-columns: 1fr;
-        padding-top: 50px;
+        padding-top: 40px;
         text-align: center;
     }
 
@@ -382,34 +442,23 @@ ul {
 }
 
 @media (max-width: 700px) {
-    .menu-btn {
-        display: block;
+    .nav-pill {
+        gap: 16px;
+        padding: 8px 8px 8px 20px;
     }
 
     .nav-links {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        right: 0;
-        flex-direction: column;
-        gap: 0;
-        background-color: var(--surface);
-        border-bottom: 1px solid var(--border);
-    }
-
-    .nav-links.open {
-        display: flex;
-    }
-
-    .nav-links a {
-        display: block;
-        padding: 14px 6%;
+        gap: 16px;
     }
 
     .about-box {
         padding: 24px 20px;
         font-size: 1rem;
+    }
+
+    .education-card {
+        flex-direction: column;
+        gap: 14px;
     }
 
     .footer-inner {
@@ -419,5 +468,18 @@ ul {
 
     .footer-contacts {
         justify-content: center;
+    }
+}
+
+/* ---------- Respect "reduce motion" device setting ---------- */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
     }
 }
