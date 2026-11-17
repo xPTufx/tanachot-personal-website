@@ -53,6 +53,36 @@ ul {
     display: none;
 }
 
+/* ---------- Top bar (above the profile) ---------- */
+.topbar {
+    border-bottom: 1px solid var(--border);
+    background-color: var(--surface);
+}
+
+.topbar-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 6%;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+}
+
+.topbar-link {
+    font-size: 0.95rem;
+    color: var(--muted);
+    transition: color 0.2s;
+}
+
+.topbar-link:hover,
+.topbar-link.active {
+    color: var(--text);
+}
+
+.topbar-link.active {
+    font-weight: 600;
+}
+
 /* ---------- Hero (two columns) ---------- */
 .hero {
     max-width: 1100px;
@@ -92,13 +122,6 @@ ul {
     color: var(--primary);
 }
 
-.hero-buttons {
-    margin-top: 28px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-}
-
 .hero-photo {
     justify-self: center;
     width: 100%;
@@ -134,7 +157,7 @@ ul {
     display: flex;
     align-items: center;
     gap: 26px;
-    padding: 8px 10px 8px 28px;
+    padding: 8px 28px;
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: 999px;
@@ -164,7 +187,7 @@ ul {
 
 /* when the nav has reached the top of the screen */
 .nav-wrap.stuck .nav-pill {
-    padding: 5px 8px 5px 22px;
+    padding: 5px 22px;
     gap: 20px;
     background-color: color-mix(in srgb, var(--surface) 80%, transparent);
     backdrop-filter: blur(12px);
@@ -186,32 +209,6 @@ ul {
 
 .pill-btn:hover {
     background-color: var(--bg);
-}
-
-/* ---------- Buttons ---------- */
-.btn {
-    display: inline-block;
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 500;
-    background-color: var(--text);
-    color: var(--bg);
-    border: 1px solid var(--text);
-    padding: 10px 22px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: transform 0.2s, opacity 0.2s;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    opacity: 0.9;
-}
-
-.btn-outline {
-    background-color: transparent;
-    color: var(--text);
-    border-color: var(--border);
 }
 
 /* ---------- Sections & cards ---------- */
@@ -431,10 +428,6 @@ ul {
         text-align: center;
     }
 
-    .hero-buttons {
-        justify-content: center;
-    }
-
     .hero-photo {
         order: -1;
         max-width: 280px;
@@ -444,7 +437,7 @@ ul {
 @media (max-width: 700px) {
     .nav-pill {
         gap: 16px;
-        padding: 8px 8px 8px 20px;
+        padding: 8px 20px;
     }
 
     .nav-links {
@@ -482,4 +475,62 @@ ul {
         transform: none;
         transition: none;
     }
+}
+
+/* ---------- My Works page: "To Be Continue" ---------- */
+.page-works {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.topbar-theme {
+    margin-left: auto; /* pushes the theme button to the right end of the top bar */
+}
+
+.coming-soon {
+    flex: 1; /* fills the space so the footer stays at the bottom */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 6%;
+}
+
+.coming-label {
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--primary);
+}
+
+.coming-title {
+    margin-top: 8px;
+    font-size: clamp(3rem, 12vw, 8rem);
+    font-weight: 700;
+    line-height: 1.05;
+    letter-spacing: -2px;
+}
+
+.coming-sub {
+    margin-top: 16px;
+    color: var(--muted);
+    font-size: 1.05rem;
+}
+
+.coming-btn {
+    margin-top: 32px;
+    display: inline-block;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background-color: var(--text);
+    color: var(--bg);
+    padding: 10px 22px;
+    border-radius: 999px;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.coming-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
 }

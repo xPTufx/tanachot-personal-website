@@ -3,7 +3,7 @@
 // ================= DATA =================
 // Edit this section to change the website. No HTML editing needed.
 
-// Each group becomes one block inside the Skills card.
+// Each group becomes one block inside the Skills card (home page only).
 // Add a new object to add a new group.
 const skillGroups = [
     {
@@ -26,6 +26,7 @@ const skillGroups = [
     }
 ];
 
+// Footer contact icons (shown on every page).
 const contacts = [
     {
         name: "LinkedIn",
@@ -56,6 +57,8 @@ const contacts = [
 ];
 
 // ================= ELEMENTS =================
+// Elements that only exist on the home page are null on other pages.
+// Every feature below checks for its element first, so one file works everywhere.
 const root = document.documentElement;
 const themeBtn = document.querySelector("#theme-btn");
 const navWrap = document.querySelector("#nav-wrap");
@@ -64,6 +67,7 @@ const navAnchors = document.querySelectorAll(".nav-links a");
 const greeting = document.querySelector("#greeting");
 const skillGroupsBox = document.querySelector("#skill-groups");
 const footerContacts = document.querySelector("#footer-contacts");
+const yearEl = document.querySelector("#year");
 const topBtn = document.querySelector("#top-btn");
 
 // ================= HELPERS =================
@@ -75,13 +79,16 @@ function getGreeting() {
     return "Good Evening 🌙";
 }
 
-// ================= THEME =================
+// ================= THEME (all pages) =================
 // The button shows the mode you will switch TO ("Light Mode" while in dark mode).
 // localStorage is wrapped in try/catch because some browsers block it
 // (for example private mode), and the site should still work.
 function setTheme(theme) {
     root.setAttribute("data-theme", theme);
-    themeBtn.textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
+
+    if (themeBtn) {
+        themeBtn.textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
+    }
 
     try {
         localStorage.setItem("theme", theme);
@@ -108,34 +115,19 @@ function loadTheme() {
     }
 }
 
-themeBtn.addEventListener("click", function () {
-    const current = root.getAttribute("data-theme");
-    setTheme(current === "dark" ? "light" : "dark");
-});
+function setupThemeButton() {
+    if (!themeBtn) return;
 
-// ================= RENDER =================
-// Builds one block (title, count badge, tags) for every group in skillGroups.
-function renderSkillGroups() {
-    skillGroupsBox.innerHTML = skillGroups
-        .map((group) => {
-            const count = group.items.length;
-            const label = count === 1 ? group.singular : group.plural;
-            const tags = group.items.map((item) => `<li>${item}</li>`).join("");
-
-            return `
-                <div class="skill-group">
-                    <div class="card-head">
-                        <h3>${group.title}</h3>
-                        <span class="badge">${count} ${label}</span>
-                    </div>
-                    <ul class="tag-list">${tags}</ul>
-                </div>
-            `;
-        })
-        .join("");
+    themeBtn.addEventListener("click", function () {
+        const current = root.getAttribute("data-theme");
+        setTheme(current === "dark" ? "light" : "dark");
+    });
 }
 
+// ================= FOOTER (all pages) =================
 function renderFooterContacts() {
+    if (!footerContacts) return;
+
     footerContacts.innerHTML = contacts
         .map((contact) => {
             // two logos (light + dark) or just one
@@ -158,10 +150,45 @@ function renderFooterContacts() {
         .join("");
 }
 
-// ================= STICKY NAV (adaptive on scroll) =================
+function setupYear() {
+    if (!yearEl) return;
+    yearEl.textContent = new Date().getFullYear();
+}
+
+// ================= HOME PAGE ONLY =================
+function setupGreeting() {
+    if (!greeting) return;
+    greeting.textContent = getGreeting();
+}
+
+// Builds one block (title, count badge, tags) for every group in skillGroups.
+function renderSkillGroups() {
+    if (!skillGroupsBox) return;
+
+    skillGroupsBox.innerHTML = skillGroups
+        .map((group) => {
+            const count = group.items.length;
+            const label = count === 1 ? group.singular : group.plural;
+            const tags = group.items.map((item) => `<li>${item}</li>`).join("");
+
+            return `
+                <div class="skill-group">
+                    <div class="card-head">
+                        <h3>${group.title}</h3>
+                        <span class="badge">${count} ${label}</span>
+                    </div>
+                    <ul class="tag-list">${tags}</ul>
+                </div>
+            `;
+        })
+        .join("");
+}
+
 // The sentinel is a tiny invisible element just above the nav.
 // When it scrolls off the top of the screen, the nav is stuck, so we add "stuck".
 function setupStickyNav() {
+    if (!navWrap || !navSentinel) return;
+
     const observer = new IntersectionObserver(function (entries) {
         const entry = entries[0];
         const isStuck = !entry.isIntersecting && entry.boundingClientRect.top < 0;
@@ -171,9 +198,10 @@ function setupStickyNav() {
     observer.observe(navSentinel);
 }
 
-// ================= ACTIVE LINK HIGHLIGHT =================
 // Highlights the nav link of the section you are currently reading.
 function setupActiveLinks() {
+    if (navAnchors.length === 0) return;
+
     const sections = document.querySelectorAll("#home, #about, #education, #skills");
 
     const observer = new IntersectionObserver(function (entries) {
@@ -192,18 +220,23 @@ function setupActiveLinks() {
     });
 }
 
-// ================= BACK TO TOP =================
-window.addEventListener("scroll", function () {
-    topBtn.classList.toggle("hidden", window.scrollY < 400);
-});
+function setupBackToTop() {
+    if (!topBtn) return;
 
-topBtn.addEventListener("click", function () {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-});
+    topBtn.classList.add("hidden");
 
-// ================= SCROLL REVEAL =================
+    window.addEventListener("scroll", function () {
+        topBtn.classList.toggle("hidden", window.scrollY < 400);
+    });
+
+    topBtn.addEventListener("click", function () {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+}
+
 function setupReveal() {
     const items = document.querySelectorAll(".reveal");
+    if (items.length === 0) return;
 
     const observer = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
@@ -221,17 +254,19 @@ function setupReveal() {
 
 // ================= START =================
 function init() {
+    // all pages
     loadTheme();
-    greeting.textContent = getGreeting();
-    document.querySelector("#year").textContent = new Date().getFullYear();
-
-    renderSkillGroups();
+    setupThemeButton();
     renderFooterContacts();
+    setupYear();
 
+    // home page only (each one quietly does nothing if its elements are missing)
+    setupGreeting();
+    renderSkillGroups();
     setupStickyNav();
     setupActiveLinks();
+    setupBackToTop();
     setupReveal();
-    topBtn.classList.add("hidden");
 }
 
 init();
